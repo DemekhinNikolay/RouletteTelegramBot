@@ -2,6 +2,7 @@ package com.demekhin;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -34,6 +35,19 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case "/stop" -> stopCommandReceived(chatId, update.getMessage().getChat().getFirstName());
 
                 default -> sendMessage(chatId, "Sorry, there is no such team");
+            }
+        } else if (update.hasCallbackQuery()) {
+            String callbackData = update.getCallbackQuery().getData();
+            long messageId = update.getCallbackQuery().getMessage().getMessageId();
+            long chatId = update.getCallbackQuery().getMessage().getChatId();
+
+            if (callbackData.equals("betBlack")) {
+                String text = "вы выбрали ставку на черное";
+                executeEditMessageText(text, chatId, messageId);
+            }
+            else if (callbackData.equals("betRed")) {
+                String text = "вы выбрали ставку на красное";
+                executeEditMessageText(text, chatId, messageId);
             }
         }
 
@@ -87,6 +101,19 @@ public class TelegramBot extends TelegramLongPollingBot {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void executeEditMessageText(String text, long chatId, long messageId) {
+        EditMessageText message = new EditMessageText();
+        message.setChatId(String.valueOf(chatId));
+        message.setText(text);
+        message.setMessageId((int) messageId);
 
         try {
             execute(message);
