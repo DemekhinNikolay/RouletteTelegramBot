@@ -15,12 +15,12 @@ import java.util.stream.IntStream;
 public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
-        return "ConsoleClientBot";
+        return "ConsolBot";
     }
 
     @Override
     public String getBotToken() {
-        return "5349494181:AAG_p38yQGfPdvbzGP9IrIyvmjS0W9FMSeA";
+        return "5349494181:AAG";
     }
 
 
