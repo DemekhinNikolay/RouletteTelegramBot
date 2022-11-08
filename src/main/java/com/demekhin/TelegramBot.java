@@ -15,12 +15,12 @@ import java.util.stream.IntStream;
 public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
-        return "Console";
+        return "ConsoleClientBt";
     }
 
     @Override
     public String getBotToken() {
-        return "5349494181";
+        return "5349494181:AAG_p38yQGfPdvbzGP9IrIyvmjS0W9FMSe";
     }
 
 
@@ -44,68 +44,87 @@ public class TelegramBot extends TelegramLongPollingBot {
             long chatId = update.getCallbackQuery().getMessage().getChatId();
 
 
-
-            if (callbackData.equals("betBlack")) {
-                typeOfBet = "black";
-                String text = "You have chosen Black";
-                executeEditMessageText(text, chatId, messageId);
-                amountSelectionKeyboard(chatId);
-
-            } else if (callbackData.equals("betRed")) {
-                typeOfBet = "red";
-                String text = "You have chosen Red";
-                executeEditMessageText(text, chatId, messageId);
-                amountSelectionKeyboard(chatId);
+            switch (callbackData) {
+                case "betBlack" -> {
+                    typeOfBet = "black";
+                    String text = "You have chosen Black";
+                    executeEditMessageText(text, chatId, messageId);
+                    amountSelectionKeyboard(chatId);
+                    break;
+                }
+                case "betRed" -> {
+                    typeOfBet = "red";
+                    String text = "You have chosen Red";
+                    executeEditMessageText(text, chatId, messageId);
+                    amountSelectionKeyboard(chatId);
+                    break;
+                }
+                case "betEven" -> {
+                    typeOfBet = "even";
+                    String text = "You have chosen Even";
+                    executeEditMessageText(text, chatId, messageId);
+                    amountSelectionKeyboard(chatId);
+                    break;
+                }
+                case "betOdd" -> {
+                    typeOfBet = "odd";
+                    String text = "You have chosen Odd";
+                    executeEditMessageText(text, chatId, messageId);
+                    amountSelectionKeyboard(chatId);
+                    break;
+                }
+                case "bet1to18" -> {
+                    typeOfBet = "bet118";
+                    String text = "You have chosen Odd";
+                    executeEditMessageText(text, chatId, messageId);
+                    amountSelectionKeyboard(chatId);
+                    break;
+                }
+                case "bet19to36" -> {
+                    typeOfBet = "bet1936";
+                    String text = "You have chosen Odd";
+                    executeEditMessageText(text, chatId, messageId);
+                    amountSelectionKeyboard(chatId);
+                    break;
+                }
+                case "bet5" -> {
+                    betAmount = 5;
+                    betProcessingService();
+                    String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
+                            " your balance " + balance;
+                    executeEditMessageText(text, chatId, messageId);
+                    break;
+                }
+                case "bet10" -> {
+                    betAmount = 10;
+                    betProcessingService();
+                    String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
+                            " your balance " + balance;
+                    executeEditMessageText(text, chatId, messageId);
+                    break;
+                }
+                case "bet25" -> {
+                    betAmount = 25;
+                    betProcessingService();
+                    String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
+                            " your balance " + balance;
+                    executeEditMessageText(text, chatId, messageId);
+                    break;
+                }
+                case "bet50" -> {
+                    betAmount = 50;
+                    betProcessingService();
+                    String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
+                            " your balance " + balance;
+                    executeEditMessageText(text, chatId, messageId);
+                    break;
+                }
             }
-
-            else if (callbackData.equals("betEven")) {
-                typeOfBet = "even";
-                String text = "You have chosen Even";
-                executeEditMessageText(text, chatId, messageId);
-                amountSelectionKeyboard(chatId);
-            } else if (callbackData.equals("betOdd")) {
-                typeOfBet = "odd";
-                String text = "You have chosen Odd";
-                executeEditMessageText(text, chatId, messageId);
-                amountSelectionKeyboard(chatId);
-            }
-
-
-
-            else if (callbackData.equals("bet5")) {
-                betAmount = 5;
-                betProcessingService();
-                String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
-                        " your balance " + balance;
-                executeEditMessageText(text, chatId, messageId);
-            } else if (callbackData.equals("bet10")) {
-                betAmount = 10;
-                betProcessingService();
-                String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
-                        " your balance " + balance;
-                executeEditMessageText(text, chatId, messageId);
-            } else if (callbackData.equals("bet25")) {
-                betAmount = 25;
-                betProcessingService();
-                String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
-                        " your balance " + balance;
-                executeEditMessageText(text, chatId, messageId);
-            } else if (callbackData.equals("bet50")) {
-                betAmount = 50;
-                betProcessingService();
-                String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
-                        " your balance " + balance;
-                executeEditMessageText(text, chatId, messageId);
-            }
-
-
         }
-
     }
 
 
     private String typeOfBet;
-
     private int balance = 1000;
     private int betAmount;
     private String victoryOrDefeat;
@@ -120,7 +139,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     private void stopCommandReceived(long chatId, String name) {
 
         String answer = "Good bye " + name + " com back to us";
-
         sendMessage(chatId, answer);
     }
 
@@ -232,38 +250,61 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void betProcessingService() {
         resultRandomNumber();
-        if (typeOfBet.equals("black")) {
-            if ((resultRandomNumber & 1) == 0) {
-                balance -= betAmount;
-                victoryOrDefeat = "loss";
-            } else {
-                balance += betAmount * 2;
-                victoryOrDefeat = "win";
-            }
-        }else if (typeOfBet.equals("red")) {
-            if ((resultRandomNumber & 1) == 0) {
-                balance += betAmount * 2;
-                victoryOrDefeat = "win";
-            } else {
-                balance -= betAmount;
-                victoryOrDefeat = "loss";
-            }
-        } else if (typeOfBet.equals("even")) {
-            if (resultRandomNumber % 2 == 0) {
-                balance += betAmount * 2;
-                victoryOrDefeat = "win";
-            }else {
-                balance -= betAmount;
-                victoryOrDefeat = "loss";
-            }
-        } else if (typeOfBet.equals("odd")) {
-            if (resultRandomNumber % 2 == 0) {
-                balance -= betAmount;
-                victoryOrDefeat = "loss";
-            }else {
-                balance += betAmount * 2;
-                victoryOrDefeat = "win";
-            }
+        switch (typeOfBet) {
+            case "black":
+                if ((resultRandomNumber & 1) == 0) {
+                    balance -= betAmount;
+                    victoryOrDefeat = "loss";
+                } else {
+                    balance += betAmount * 2;
+                    victoryOrDefeat = "win";
+                }
+                break;
+            case "red":
+                if ((resultRandomNumber & 1) == 0) {
+                    balance += betAmount * 2;
+                    victoryOrDefeat = "win";
+                } else {
+                    balance -= betAmount;
+                    victoryOrDefeat = "loss";
+                }
+                break;
+            case "even":
+                if (resultRandomNumber % 2 == 0) {
+                    balance += betAmount * 2;
+                    victoryOrDefeat = "win";
+                } else {
+                    balance -= betAmount;
+                    victoryOrDefeat = "loss";
+                }
+                break;
+            case "odd":
+                if (resultRandomNumber % 2 == 0) {
+                    balance -= betAmount;
+                    victoryOrDefeat = "loss";
+                } else {
+                    balance += betAmount * 2;
+                    victoryOrDefeat = "win";
+                }
+                break;
+            case "bet118":
+                if (resultRandomNumber <= 18) {
+                    balance += betAmount * 2;
+                    victoryOrDefeat = "win";
+                } else {
+                    balance -= betAmount;
+                    victoryOrDefeat = "loss";
+                }
+                break;
+            case "bet1936":
+                if (resultRandomNumber >= 19) {
+                    balance += betAmount * 2;
+                    victoryOrDefeat = "win";
+                } else {
+                    balance -= betAmount;
+                    victoryOrDefeat = "loss";
+                }
+                break;
         }
     }
 
