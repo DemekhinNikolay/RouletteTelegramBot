@@ -15,12 +15,12 @@ import java.util.stream.IntStream;
 public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
-        return "ConsolBot";
+        return "Console";
     }
 
     @Override
     public String getBotToken() {
-        return "5349494181:AAG";
+        return "5349494181";
     }
 
 
@@ -46,42 +46,55 @@ public class TelegramBot extends TelegramLongPollingBot {
 
 
             if (callbackData.equals("betBlack")) {
-                color = "black";
-                String text = "Ваш выбор Black";
+                typeOfBet = "black";
+                String text = "You have chosen Black";
                 executeEditMessageText(text, chatId, messageId);
                 amountSelectionKeyboard(chatId);
 
             } else if (callbackData.equals("betRed")) {
-                color = "red";
-                String text = "Ваш выбор Red";
+                typeOfBet = "red";
+                String text = "You have chosen Red";
+                executeEditMessageText(text, chatId, messageId);
+                amountSelectionKeyboard(chatId);
+            }
+
+            else if (callbackData.equals("betEven")) {
+                typeOfBet = "even";
+                String text = "You have chosen Even";
+                executeEditMessageText(text, chatId, messageId);
+                amountSelectionKeyboard(chatId);
+            } else if (callbackData.equals("betOdd")) {
+                typeOfBet = "odd";
+                String text = "You have chosen Odd";
                 executeEditMessageText(text, chatId, messageId);
                 amountSelectionKeyboard(chatId);
             }
 
 
+
             else if (callbackData.equals("bet5")) {
                 betAmount = 5;
                 betProcessingService();
-                String text = "Ваша сумма ставки " + betAmount + " $" + " Вам выпало " + resultRandomColor + " Это: " + victoryOrDefeat +
-                        " Ваш баланс " + balance;
+                String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
+                        " your balance " + balance;
                 executeEditMessageText(text, chatId, messageId);
             } else if (callbackData.equals("bet10")) {
                 betAmount = 10;
                 betProcessingService();
-                String text = "Ваша сумма ставки " + betAmount + " $" + " Вам выпало " + resultRandomColor + " Это: " + victoryOrDefeat +
-                        " Ваш баланс " + balance;
+                String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
+                        " your balance " + balance;
                 executeEditMessageText(text, chatId, messageId);
             } else if (callbackData.equals("bet25")) {
                 betAmount = 25;
                 betProcessingService();
-                String text = "Ваша сумма ставки " + betAmount + " $" + " Вам выпало " + resultRandomColor + " Это: " + victoryOrDefeat +
-                        " Ваш баланс " + balance;
+                String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
+                        " your balance " + balance;
                 executeEditMessageText(text, chatId, messageId);
             } else if (callbackData.equals("bet50")) {
                 betAmount = 50;
                 betProcessingService();
-                String text = "Ваша сумма ставки " + betAmount + " $" + " Вам выпало " + resultRandomColor + " Это: " + victoryOrDefeat +
-                        " Ваш баланс " + balance;
+                String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
+                        " your balance " + balance;
                 executeEditMessageText(text, chatId, messageId);
             }
 
@@ -91,7 +104,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
 
-    private String color;
+    private String typeOfBet;
 
     private int balance = 1000;
     private int betAmount;
@@ -175,7 +188,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         Server rouletteServer = new Server();
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
-        message.setText("Выберите сумму ставки, ваш банк $ " + balance);
+        message.setText("Select the bid amount, your balance $ " + balance);
 
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInLine = new ArrayList<>();
@@ -219,7 +232,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void betProcessingService() {
         resultRandomNumber();
-        if (color.equals("black")) {
+        if (typeOfBet.equals("black")) {
             if ((resultRandomNumber & 1) == 0) {
                 balance -= betAmount;
                 victoryOrDefeat = "loss";
@@ -227,13 +240,29 @@ public class TelegramBot extends TelegramLongPollingBot {
                 balance += betAmount * 2;
                 victoryOrDefeat = "win";
             }
-        }else if (color.equals("red")) {
+        }else if (typeOfBet.equals("red")) {
             if ((resultRandomNumber & 1) == 0) {
                 balance += betAmount * 2;
                 victoryOrDefeat = "win";
             } else {
                 balance -= betAmount;
-                victoryOrDefeat = "los";
+                victoryOrDefeat = "loss";
+            }
+        } else if (typeOfBet.equals("even")) {
+            if (resultRandomNumber % 2 == 0) {
+                balance += betAmount * 2;
+                victoryOrDefeat = "win";
+            }else {
+                balance -= betAmount;
+                victoryOrDefeat = "loss";
+            }
+        } else if (typeOfBet.equals("odd")) {
+            if (resultRandomNumber % 2 == 0) {
+                balance -= betAmount;
+                victoryOrDefeat = "loss";
+            }else {
+                balance += betAmount * 2;
+                victoryOrDefeat = "win";
             }
         }
     }
