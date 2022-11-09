@@ -15,12 +15,12 @@ import java.util.stream.IntStream;
 public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
-        return "ConsoleClientBt";
+        return "ConsoleClientBot";
     }
 
     @Override
     public String getBotToken() {
-        return "5349494181:AAG_p38yQGfPdvbzGP9IrIyvmjS0W9FMSe";
+        return "5349494181:AAG_p38yQGfPdvbzGP9IrIyvmjS0W9FMSeA";
     }
 
 
@@ -32,7 +32,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             long chatId = update.getMessage().getChatId();
 
             switch (messageText) {
-                case "/start" -> startCommandReceived(chatId);
+                case "/start" -> betSelectionKeyboard(chatId);
 
                 case "/stop" -> stopCommandReceived(chatId, update.getMessage().getChat().getFirstName());
 
@@ -97,32 +97,32 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case "bet5" -> {
                     betAmount = 5;
                     betProcessingService();
-                    String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
-                            " your balance " + balance;
+                    String text = "your bet amount $" + betAmount + " your result " + resultRandomColor + ", this: " + victoryOrDefeat +
+                            "\n your balance $" + balance;
                     executeEditMessageText(text, chatId, messageId);
                     break;
                 }
                 case "bet10" -> {
                     betAmount = 10;
                     betProcessingService();
-                    String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
-                            " your balance " + balance;
+                    String text = "your bet amount $" + betAmount + " your result " + resultRandomColor + ", this: " + victoryOrDefeat +
+                            "\n your balance $" + balance;
                     executeEditMessageText(text, chatId, messageId);
                     break;
                 }
                 case "bet25" -> {
                     betAmount = 25;
                     betProcessingService();
-                    String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
-                            " your balance " + balance;
+                    String text = "your bet amount $" + betAmount + " your result " + resultRandomColor + ", this: " + victoryOrDefeat +
+                            "\n your balance $" + balance;
                     executeEditMessageText(text, chatId, messageId);
                     break;
                 }
                 case "bet50" -> {
                     betAmount = 50;
                     betProcessingService();
-                    String text = "your bet amount " + betAmount + " $" + " your result " + resultRandomColor + " this: " + victoryOrDefeat +
-                            " your balance " + balance;
+                    String text = "your bet amount $" + betAmount + " your result " + resultRandomColor + ", this: " + victoryOrDefeat +
+                            "\n your balance $" + balance;
                     executeEditMessageText(text, chatId, messageId);
                     break;
                 }
@@ -141,10 +141,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     private int resultRandomNumber;
     private String resultRandomColor;
 
-
-    private void startCommandReceived(long chatId) {
-        betSelectionKeyboard(chatId);
-    }
 
     private void stopCommandReceived(long chatId, String name) {
 
@@ -181,7 +177,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         Server rouletteServer = new Server();
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
-        message.setText("Hi, choose the type of bet\n" +
+        message.setText("Choose the type of bet\n" +
                 "1 - black\n" +
                 "2 - red\n" +
                 "3 - Number\n" +
@@ -216,7 +212,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         Server rouletteServer = new Server();
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
-        message.setText("Select the bid amount, your balance $ " + balance);
+        message.setText("Select the bid amount, your balance $" + balance);
 
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInLine = new ArrayList<>();
