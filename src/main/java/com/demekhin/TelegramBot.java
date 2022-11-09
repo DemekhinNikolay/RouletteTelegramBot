@@ -57,6 +57,17 @@ public class TelegramBot extends TelegramLongPollingBot {
                 executeEditMessageText(text, chatId, messageId);
                 amountSelectionKeyboard(chatId);
             }
+            else if (callbackData.equals("betNumber")) {
+                color = "number";
+                String text = "Ваш выбор Number";
+                executeEditMessageText(text, chatId, messageId);
+                keyboardNumber(chatId);
+
+               /* String result;
+                result1 = callbackData;
+                result1 = Integer.parseInt(result);*/
+            }
+
 
 
             else if (callbackData.equals("bet5")) {
@@ -85,12 +96,14 @@ public class TelegramBot extends TelegramLongPollingBot {
                 executeEditMessageText(text, chatId, messageId);
             }
 
-
+            result1 = Integer.parseInt(callbackData);
+            amountSelectionKeyboard(chatId);
         }
 
     }
 
-
+    //private String result;
+    int result1;
     private String color;
 
     private int balance = 1000;
@@ -198,6 +211,77 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     }
 
+    private void keyboardNumber(long chatId) {
+        Server rouletteServer = new Server();
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        message.setText("Выберите номер на который хотите поставить");
+
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInLine = new ArrayList<>();
+        List<InlineKeyboardButton> rowInLine = new ArrayList<>();
+        List<InlineKeyboardButton> rowInLine1 = new ArrayList<>();
+        List<InlineKeyboardButton> rowInLine2 = new ArrayList<>();
+        List<InlineKeyboardButton> rowInLine3 = new ArrayList<>();
+        List<InlineKeyboardButton> rowInLine4 = new ArrayList<>();
+
+        rouletteServer.addButton(rowInLine, "1", "1");
+        rouletteServer.addButton(rowInLine, "2", "2");
+        rouletteServer.addButton(rowInLine, "3", "3");
+        rouletteServer.addButton(rowInLine, "4", "4");
+        rouletteServer.addButton(rowInLine, "5", "5");
+        rouletteServer.addButton(rowInLine, "6", "6");
+        rouletteServer.addButton(rowInLine, "7", "7");
+        rouletteServer.addButton(rowInLine, "8", "8");
+
+        rouletteServer.addButton(rowInLine1, "9", "9");
+        rouletteServer.addButton(rowInLine1, "10", "10");
+        rouletteServer.addButton(rowInLine1, "11", "11");
+        rouletteServer.addButton(rowInLine1, "12", "12");
+        rouletteServer.addButton(rowInLine1, "13", "13");
+        rouletteServer.addButton(rowInLine1, "14", "14");
+        rouletteServer.addButton(rowInLine1, "15", "15");
+        rouletteServer.addButton(rowInLine1, "16", "16");
+
+        rouletteServer.addButton(rowInLine2, "17", "17");
+        rouletteServer.addButton(rowInLine2, "18", "18");
+        rouletteServer.addButton(rowInLine2, "19", "19");
+        rouletteServer.addButton(rowInLine2, "20", "20");
+        rouletteServer.addButton(rowInLine2, "21", "21");
+        rouletteServer.addButton(rowInLine2, "22", "22");
+        rouletteServer.addButton(rowInLine2, "23", "23");
+        rouletteServer.addButton(rowInLine2, "24", "24");
+
+        rouletteServer.addButton(rowInLine3, "25", "25");
+        rouletteServer.addButton(rowInLine3, "26", "26");
+        rouletteServer.addButton(rowInLine3, "27", "27");
+        rouletteServer.addButton(rowInLine3, "28", "28");
+        rouletteServer.addButton(rowInLine3, "29", "29");
+        rouletteServer.addButton(rowInLine3, "30", "30");
+        rouletteServer.addButton(rowInLine3, "31", "31");
+        rouletteServer.addButton(rowInLine3, "32", "32");
+
+        rouletteServer.addButton(rowInLine4, "33", "33");
+        rouletteServer.addButton(rowInLine4, "34", "34");
+        rouletteServer.addButton(rowInLine4, "35", "35");
+        rouletteServer.addButton(rowInLine4, "36", "36");
+        rouletteServer.addButton(rowInLine4, "0", "0");
+
+        rowsInLine.add(rowInLine);
+        rowsInLine.add(rowInLine1);
+        rowsInLine.add(rowInLine2);
+        rowsInLine.add(rowInLine3);
+        rowsInLine.add(rowInLine4);
+        markupInline.setKeyboard(rowsInLine);
+        message.setReplyMarkup(markupInline);
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void resultRandomNumber() {
         final List<String> colorArray = IntStream.range(0, 37).boxed()
                 .map(x -> {
@@ -213,7 +297,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         resultRandomNumber = (int) Math.floor(Math.random() * colorArray.size());
         resultRandomColor = colorArray.get(resultRandomNumber);
-
     }
 
 
@@ -230,6 +313,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         }else if (color.equals("red")) {
             if ((resultRandomNumber & 1) == 0) {
                 balance += betAmount * 2;
+                victoryOrDefeat = "win";
+            } else {
+                balance -= betAmount;
+                victoryOrDefeat = "los";
+            }
+        }else if (color.equals("number")) {
+            if (resultRandomNumber == result1) {
+                balance += betAmount * 35;
                 victoryOrDefeat = "win";
             } else {
                 balance -= betAmount;
